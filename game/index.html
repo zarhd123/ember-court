@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ember Court — Duel of the Cindral Throne</title>
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+<div id="app">
+  <!-- ======= Table ======= -->
+  <header id="topbar">
+    <div class="hero foe-hero" id="foeHero">
+      <div class="portrait foe-portrait" aria-label="Vex, the Cindral Warden">V</div>
+      <div class="hero-info">
+        <div class="hero-name">Vex, Cindral Warden</div>
+        <div class="life" id="foeLife" title="Rival life"><span class="heart">♥</span><span id="foeLifeNum">30</span></div>
+      </div>
+      <div class="deck-pile" id="foeDeck" title="Rival deck"><span id="foeDeckCount">27</span></div>
+    </div>
+    <div id="turnBanner" class="hidden">Your turn</div>
+    <div class="hero my-hero" id="myHero">
+      <div class="deck-pile" id="myDeck" title="Your deck"><span id="myDeckCount">27</span></div>
+      <div class="hero-info right">
+        <div class="hero-name">You, Embercaller</div>
+        <div class="life" id="myLife" title="Your life"><span class="heart">♥</span><span id="myLifeNum">30</span></div>
+      </div>
+      <div class="portrait my-portrait" aria-label="You, the Embercaller">E</div>
+    </div>
+  </header>
+
+  <main id="table">
+    <section id="foeZone" aria-label="Opponent hand and board">
+      <div id="foeHand" class="hand foe-hand"></div>
+      <div id="foeBoard" class="board"></div>
+    </section>
+
+    <section id="midline">
+      <div id="log" aria-live="polite"></div>
+      <div id="midControls">
+        <div id="mana" title="Mana crystals"><span id="manaCrystals"></span><span id="manaNum">1/1</span></div>
+        <button id="endTurn" type="button">End turn <kbd>E</kbd></button>
+      </div>
+    </section>
+
+    <section id="myZone" aria-label="Your board and hand">
+      <div id="myBoard" class="board"></div>
+      <div id="myHand" class="hand my-hand"></div>
+    </section>
+  </main>
+
+  <footer id="hintbar">
+    <span><kbd>1</kbd>–<kbd>7</kbd> select card</span>
+    <span><kbd>Enter</kbd> play / confirm</span>
+    <span><kbd>E</kbd> end turn</span>
+    <span><kbd>Esc</kbd> cancel</span>
+    <span>Click a creature, then click its target to attack</span>
+    <button id="muteBtn" type="button" title="Sound on/off">♪ on</button>
+    <button id="helpBtn" type="button" title="How to play">How to play</button>
+  </footer>
+
+  <!-- ======= Overlays ======= -->
+  <div id="titleScreen" class="overlay">
+    <div class="title-inner">
+      <div class="title-emblem">♛</div>
+      <h1>EMBER COURT</h1>
+      <p class="subtitle">Duel of the Cindral Throne</p>
+      <p class="tagline">Outwit Vex, the Cindral Warden, in a duel of flame, tide, thorn and stone.
+        Spend mana, summon creatures, and bring the Warden's life to zero.</p>
+      <button id="playBtn" type="button" class="big-btn">▶&nbsp; Play the duel</button>
+      <p class="title-meta">30 life each · mana grows every turn · first to zero loses</p>
+      <p class="title-keys">Mouse or keyboard — <kbd>1</kbd>–<kbd>7</kbd> pick a card, <kbd>Enter</kbd> plays it, <kbd>E</kbd> ends your turn</p>
+    </div>
+  </div>
+
+  <div id="helpScreen" class="overlay hidden">
+    <div class="panel">
+      <h2>How to play</h2>
+      <ul>
+        <li><b>Goal:</b> reduce Vex's life from 30 to 0. If your life reaches 0, you lose.</li>
+        <li><b>Mana:</b> you gain 1 mana crystal each turn (up to 10) and it refills every turn. Every card costs mana.</li>
+        <li><b>Creatures:</b> play them onto your board. They cannot attack the turn they are summoned, unless they have <b>Rush</b>.</li>
+        <li><b>Taunt:</b> a creature with Taunt must be attacked before anything else on its side.</li>
+        <li><b>Attack:</b> click one of your ready creatures, then click an enemy creature or Vex. Creatures strike back.</li>
+        <li><b>Spells:</b> Fireball and Ember Surge damage a target; Healing Spring restores your life; Whispering Current draws cards; Thorn Volley and Quake hit every enemy creature.</li>
+        <li><b>Keyboard:</b> <kbd>1</kbd>–<kbd>7</kbd> select a hand card, <kbd>Enter</kbd> play it, <kbd>E</kbd> end turn, <kbd>Esc</kbd> cancel, <kbd>R</kbd> play again after the duel.</li>
+      </ul>
+      <button id="closeHelp" type="button" class="big-btn">Close</button>
+    </div>
+  </div>
+
+  <div id="endScreen" class="overlay hidden">
+    <div class="panel end-panel">
+      <div id="endEmblem" class="end-emblem">♛</div>
+      <h2 id="endTitle">VICTORY</h2>
+      <p id="endText"></p>
+      <div id="endStats"></div>
+      <button id="againBtn" type="button" class="big-btn">↻&nbsp; Play again <kbd>R</kbd></button>
+    </div>
+  </div>
+
+  <div id="floaterLayer"></div>
+</div>
+
+<!-- Element suit icons, drawn once and reused by every card -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="ico-flame" viewBox="0 0 24 24"><path d="M12 2c1 4-4 6-4 11a4.5 4.5 0 0 0 9 .5C17 9 13 8 12 2z" fill="currentColor"/><path d="M12 13c.8 2.6-2.4 3.4-2.4 6a2.6 2.6 0 0 0 5.2.4C14.8 16.6 12.6 16 12 13z" fill="#fff" opacity=".55"/></symbol>
+    <symbol id="ico-tide" viewBox="0 0 24 24"><path d="M2 14c2.5-2.5 5-2.5 7.5 0s5 2.5 7.5 0 4-2 5-1v3c-1-1-2.5-1-5 1.5S12 20 9.5 17.5 4.5 15 2 17.5z" fill="currentColor"/><path d="M2 8c2.5-2.5 5-2.5 7.5 0s5 2.5 7.5 0 4-2 5-1v3c-1-1-2.5-1-5 1.5S12 14 9.5 11.5 4.5 9 2 11.5z" fill="currentColor" opacity=".7"/></symbol>
+    <symbol id="ico-thorn" viewBox="0 0 24 24"><path d="M12 2C7 7 4 11 4 15a8 8 0 0 0 16 0c0-4-3-8-8-13z" fill="currentColor"/><path d="M12 6v14" stroke="#fff" stroke-width="1.6" opacity=".6"/></symbol>
+    <symbol id="ico-stone" viewBox="0 0 24 24"><path d="M12 2 20 9l-8 13L4 9z" fill="currentColor"/><path d="M12 2 20 9h-6l-2-7z" fill="#fff" opacity=".35"/></symbol>
+  </defs>
+</svg>
+
+<script type="module" src="./src/game.js"></script>
+</body>
+</html>

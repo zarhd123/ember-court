@@ -1,0 +1,5 @@
+kit/
+kit.tar.gz
+out/
+*.tar.gz
+.makefun/
